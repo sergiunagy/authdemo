@@ -1,0 +1,69 @@
+version: "3.8"
+
+networks:
+  demonet:
+    name: demo-net
+
+services:
+  auth:
+    build: 
+      context: ../
+      dockerfile: ./deploy/Dockerfile
+    image: sergiunb/authdemo
+    container_name: authdemo
+    # bind mount local src folder DEV ONLY
+    volumes:
+      - "../app:/home/app"
+    ports:
+      - "8081:5000" # host-port:container-port 
+    networks:
+      - demonet
+    # depends_on:
+    #   - dbserver  # TODO: implement a health check dependency
+    environment:
+      POSTGRES_HOST: dbserver
+      POSTGRES_HOST_PORT: 5432
+      POSTGRES_PASSWORD: dummy_pass_951
+      POSTGRES_USER: demoadmin
+      POSTGRES_DB: authdemodb    
+
+  dbserver:
+    build:
+      context: ../db/secdb/deploy
+      dockerfile: ./Dockerfile.pg.dev
+    image: sergiunb/postgresdb
+    container_name: dbserver
+    environment:
+      POSTGRES_PASSWORD: dummy_pass_951
+      POSTGRES_USER: demoadmin
+      POSTGRES_DB: authdemodb    
+    restart: always
+
+    networks:
+      - demonet
+    # this service serves internally to the cluster network only, on port:
+    expose:
+      - 5432
+
+  secdbadmin:
+    image: dpage/pgadmin4:6.20
+    networks:
+    - demonet
+    restart: always
+    environment:
+      PGADMIN_DEFAULT_PASSWORD: dummy_pass_951  # user password postgres client - if login is enabled
+      PGADMIN_DEFAULT_EMAIL: demotest@demo.com # user email postgres client - if login is enabled
+      PGADMIN_CONFIG_SERVER_MODE: 'False' # don't request client credentials (the above postgres client email and pass)
+      PGADMIN_CONFIG_MASTER_PASSWORD_REQUIRED: 'False' # don't request a master pas
+    volumes:
+      - ../db/secdb/deploy/pgadmin_conf.json:/pgadmin4/servers.json
+      - ../db/secdb/deploy/pgpass:/pgadmin4/.pgpass
+
+    entrypoint:  >
+      /bin/sh -c "
+      cp -f /pgadmin4/.pgpass /var/lib/pgadmin/;
+      chmod 600 /var/lib/pgadmin/.pgpass;
+      /entrypoint.sh
+      "
+    ports:
+      - 8090:80

@@ -1,0 +1,2 @@
+# hostname:port:database:username:password
+dbserver:5432:authdemodb:demoadmin:dummy_pass_951

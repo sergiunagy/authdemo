@@ -1,0 +1,9 @@
+ARG baseImage=postgres
+ARG baseVersion=15.2-alpine
+
+FROM ${baseImage}:${baseVersion}
+
+ARG baseImage=postgres
+ARG baseVersion=15.2-alpine
+ 
+COPY db-init-and-seed.sql /docker-entrypoint-initdb.d/initdb.sql
