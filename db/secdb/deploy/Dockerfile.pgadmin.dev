@@ -1,0 +1,11 @@
+ARG baseImage=dpage/pgadmin4
+ARG baseVersion=6.20
+
+FROM ${baseImage}:${baseVersion}
+
+ARG baseImage=dpage/pgadmin4
+ARG baseVersion=6.20
+LABEL maintainer="sergiun"
+
+RUN mkdir -p -m 700 /var/lib/pgadmin/storage/pgadmin4_pgadmin.org
+COPY --chmod=600 ./secdb/deploy/pgpassfile /var/lib/pgadmin/storage/pgadmin4_pgadmin.org/pgpassfile

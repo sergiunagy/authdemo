@@ -1,0 +1,24 @@
+# ######################
+# library dependencies
+# 
+# Note: check for dev/prod specific use cases
+# ######################
+
+# Web app/server -> maybe extend with gunicorn for paraller workers
+uvicorn==0.23.2 
+fastapi==0.101.1
+
+# db client libs
+psycopg2-binary==2.9.7
+psycopg==3.1.10
+
+# db data modelling
+sqlalchemy==2.0.19
+
+# crypto and jwt
+passlib==1.7.4
+bcrypt==4.0.1
+
+# test client
+httpx==0.24.1
+pytest==7.4.0

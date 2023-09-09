@@ -1,0 +1,14 @@
+{
+    "Servers": {
+        "1": {
+            "Name": "AuthDemoSecurity",
+            "Group": "Servers",
+            "Host": "dbserver",
+            "Port": 5432,
+            "MaintenanceDB": "authdemodb",
+            "Username": "demoadmin",
+            "SSLMode": "prefer",
+            "PassFile": "/var/lib/pgadmin/.pgpass"
+        }
+    }
+}
